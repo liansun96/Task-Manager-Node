@@ -1,24 +1,38 @@
-const getAllTasks = (req , res) => {
-    res.send('Get All Tasks')
-}
+const Task = require("../models/Task");
 
-const createTask = (req , res) => {
-    res.json(req.body)
-}
+const getAllTasks = async (req, res) => {
+  const tasks = await Task.find({});
 
-const getSingleTask = (req , res) => {
-    res.json({id:req.params.id})
-}
+  res.status(200).send({ tasks });
+};
 
-const updateTask = (req , res) => {
-    res.send('Update Task')
-}
- 
-const deleteTask = (req , res) => {
-    res.send('Delete Task')
-}
+const createTask = async (req, res) => {
+  const task = await Task.create(req.body);
+  res.status(201).json(task);
+};
 
+const getSingleTask = async (req, res) => {
+  const { id: taskId } = req.params;
+  const task = await Task.findOne({ _id: taskId });
 
+  if (!task) {
+    return res.status(404).send(`No task with id ${taskId}`)
+  }
+  res.json({ task });
+};
 
+const updateTask = (req, res) => {
+  res.send("Update Task");
+};
 
-module.exports = {getAllTasks , createTask , getSingleTask , updateTask , deleteTask} 
+const deleteTask = (req, res) => {
+  res.send("Delete Task");
+};
+
+module.exports = {
+  getAllTasks,
+  createTask,
+  getSingleTask,
+  updateTask,
+  deleteTask,
+};
