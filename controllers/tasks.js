@@ -1,14 +1,25 @@
 const Task = require("../models/Task");
 
-const getAllTasks = async (req, res) => {
-  const tasks = await Task.find({});
+// const getAllTasks = async (req, res) => {
+//   const tasks = await Task.find({});
 
-  res.status(200).send({ tasks });
-};
+//   res.status(200).send({ tasks });
+// };
+
+const getAllTasks = asyncWrapper(async (req, res) => {
+  const tasks = await Task.find({});
+  res.status(200).json({ tasks });
+  // res.status(200).json({ tasks  , amount : tasks.length});
+  // res.status(200).json({ status : "success" , data : {tasks , nbHits : tasks.length}});
+});
 
 const createTask = async (req, res) => {
-  const task = await Task.create(req.body);
-  res.status(201).json(task);
+  try {
+    const task = await Task.create(req.body);
+    res.status(201).json({ task });
+  } catch (error) {
+    res.status(500).json({ msg: error})
+  }
 };
 
 const getSingleTask = async (req, res) => {
@@ -16,7 +27,7 @@ const getSingleTask = async (req, res) => {
   const task = await Task.findOne({ _id: taskId });
 
   if (!task) {
-    return res.status(404).send(`No task with id ${taskId}`)
+    return res.status(404).send(`No task with id ${taskId}`);
   }
   res.json({ task });
 };
