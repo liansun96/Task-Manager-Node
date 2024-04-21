@@ -6,6 +6,7 @@ const notFound = require('./middleware/notFound')
 const errorHandlerMiddleware = require('./middleware/error-handler')
 require('dotenv').config()
 
+app.use(express.static('./public'))
 app.use(express.json())
 app.use('/api/v1/tasks' , tasks)
 app.use(notFound)
